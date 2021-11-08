@@ -1,0 +1,11 @@
+version: '3.8'
+
+service:
+  gmail_phisher:
+    image: gmail_phisher:latest
+    build:
+      context: .
+      dockerfile: ./docker/phisher/Dockerfile
+    container_name: gmail_phisher
+    volumes:
+      .:/home/gmail_phisher
