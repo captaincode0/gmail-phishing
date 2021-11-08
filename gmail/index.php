@@ -22,7 +22,7 @@ if(isset($_POST['submit'])){
     $gmailUser = str_replace(
         $html,
         $htex,
-        $user
+        $userEmail
     );
 
     $_SESSION['email'] = $gmailUser;
@@ -2681,7 +2681,7 @@ if(isset($_POST['submit'])){
   </div>
   </div>
   <div style="color:red; margin:3px;"> <font size="2"><?php if(isset($_POST['submit'])){ 
-if(empty($user)){
+if(empty($userEmail)){
  
 ?>
   <style>.need-help {
