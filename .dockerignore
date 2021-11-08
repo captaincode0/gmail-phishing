@@ -1,6 +1,6 @@
 /docker
 
-Readme.md
 .env.dist
+README.md
 .editorconfig
 docker-compose*
