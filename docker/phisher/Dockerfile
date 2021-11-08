@@ -10,11 +10,12 @@ RUN apt update \
   && apt install --yes wget unzip software-properties-common \
   && add-apt-repository --yes ppa:ondrej/php \
   && apt update \
-  && apt install --yes apache2 php
+  && apt install --yes apache2 php libapache2-mod-php \
+  && a2enmod php7.0
 
 RUN wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-386.zip \
   && unzip ngrok-stable-linux-386.zip \
   && mv ngrok /usr/bin/ngrok \
-  && ngrok authtoken ${NGROK_TOKEN}
+  && ngrok authtoken "${NGROK_TOKEN}"
 
 CMD tail -f /dev/stdout
