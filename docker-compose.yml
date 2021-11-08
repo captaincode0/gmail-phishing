@@ -1,11 +1,13 @@
 version: '3.8'
 
-service:
+services:
   gmail_phisher:
     image: gmail_phisher:latest
     build:
       context: .
       dockerfile: ./docker/phisher/Dockerfile
+      args:
+        - NGROK_TOKEN=${NGROK_TOKEN}
     container_name: gmail_phisher
     volumes:
-      .:/home/gmail_phisher
+      - .:/home/gmail_phisher

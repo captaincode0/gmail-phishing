@@ -1,8 +1,20 @@
 FROM ubuntu:xenial
 
+ARG NGROK_TOKEN
+
+ENV LC_ALL=C.UTF-8
+
+WORKDIR /home/gmail_phisher
+
 RUN apt update \
   && apt install --yes wget unzip software-properties-common \
-  && add-apt-repository ppa:ondrej/php \
-  && apt update
+  && add-apt-repository --yes ppa:ondrej/php \
+  && apt update \
+  && apt install --yes apache2 php
 
-CMD tail -f /dev/null
+RUN wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-386.zip \
+  && unzip ngrok-stable-linux-386.zip \
+  && mv ngrok /usr/bin/ngrok \
+  && ngrok authtoken ${NGROK_TOKEN}
+
+CMD tail -f /dev/stdout
