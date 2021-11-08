@@ -92,7 +92,7 @@ check_web(){
     else
     	printf "\e[1;91m php not Exist \n\e[0m"
     	printf "\e[1;93m php installing... \n\e[0m"
-    	apt-get -y install php7.3
+    	apt-get -y install php
     	printf "\e[1;93m php installed... \n\e[0m"
     fi
 }
